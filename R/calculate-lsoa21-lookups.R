@@ -1,5 +1,6 @@
 library(sf)
 library(dplyr)
+library(janitor)
 
 lsoa21  <- st_read(
   "data/shape-files/lsoa-2021/LSOA_2021_EW_BSC_V4.shp"
@@ -66,6 +67,7 @@ for (area_i in names(areas)) {
   lookup_list[[area_i]] <- lsoa_lookup
 }
 
-final_lookup <- purrr::reduce(lookup_list, dplyr::left_join, by = 'LSOA21CD')
+final_lookup <- purrr::reduce(lookup_list, dplyr::left_join, by = 'LSOA21CD') %>%
+  clean_names()
 
 writexl::write_xlsx(final_lookup, "data/lsoa21-lookup.xlsx")
